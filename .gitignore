@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 01-Plan_your_trip_with_Kayak.ipynb
+.mapbox_token
