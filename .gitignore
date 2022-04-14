@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 01-Plan_your_trip_with_Kayak.ipynb
 .mapbox_token
+Archive.zip
+config
+credentials
