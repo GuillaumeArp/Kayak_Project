@@ -4,17 +4,18 @@ import numpy as np
 import plotly.express as px
 import requests
 import os
+import s3fs
 
 st.set_page_config(page_title='Kayak', page_icon=':sunny:', layout='wide')
 
 st.markdown("<h1 style='text-align: center;'>Kayak Project</h1>", unsafe_allow_html=True)
 
-key = os.getenv('APIKEY')
+fs = s3fs.S3FileSystem(anon=False)
 mapbox_token = os.getenv('MAPBOX_TOKEN')
 
 def load_data():
-    'Loading data...'
-    return pd.read_csv('s3://kayak-project-garp/df_complete.csv')
+    with fs.open('kayak-project-garp/df_complete.csv') as f:
+        return pd.read_csv(f)
 
 def hotel_data(df):
 
@@ -78,6 +79,7 @@ with st.sidebar:
 st.write('This page shows the two plots required as deliverables for the Kayak Project, as part of the Jedha Bootcamp Fullstack training.')
 st.markdown('The repository of this project can be found [on this page](https://github.com/GuillaumeArp/Kayak_Project).')
 
+
 def plot_weather():
     px.set_mapbox_access_token(mapbox_token)
 
@@ -111,6 +113,7 @@ def plot_weather():
         template='plotly_dark',
         title_x=0.5,
         title_text='The 5 cities with the best weather over the next 7 days')
+    fig.update_layout(mapbox_style="dark")
     
     return fig
 
@@ -147,6 +150,7 @@ def plot_hotels():
         template='plotly_dark',
         title_x=0.5,
         title_text='20 best hotels from the 5 cities with the best weather')
+    fig.update_layout(mapbox_style="dark")
     
     return fig
 
