@@ -166,7 +166,7 @@ def plot_hotels():
             'score_weather': False,
             'id': False,
             },
-        labels={'score': 'Score', 'name': 'Hotel Name'}
+        labels={'score': 'Score', 'city': 'City'}
     )
 
     fig.update_layout(
