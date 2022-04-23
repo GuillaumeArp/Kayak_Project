@@ -8,7 +8,7 @@ import datetime
 
 st.set_page_config(page_title='Kayak', page_icon=':sunny:', layout='wide')
 
-st.markdown("<h1 style='text-align: center;'>Projet Kayak</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Kayak Project</h1>", unsafe_allow_html=True)
 
 key = os.getenv('APIKEY')
 mapbox_token = os.getenv('MAPBOX_TOKEN')
@@ -180,3 +180,8 @@ def plot_hotels():
 st.plotly_chart(plot_weather(), use_container_width=True)
 st.write(' ')
 st.plotly_chart(plot_hotels(), use_container_width=True)
+st.write(' ')
+st.write(' ')
+st.write(' ')
+st.write(' ')
+st.write('Made by Guillaume Arp.')
