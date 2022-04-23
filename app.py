@@ -129,7 +129,8 @@ def plot_weather():
             'felt_temperature': True,
             'inverted_score': False,
             },
-        animation_frame='day_plus'
+        animation_frame='day_plus',
+        labels={'felt_temperature': 'Felt Temperature', 'rain_chances': 'Rain Chances', 'humidity': 'Humidity'}
     )
 
     fig.update_layout(
@@ -165,6 +166,7 @@ def plot_hotels():
             'score_weather': False,
             'id': False,
             },
+        labels={'score': 'Score', 'name': 'Hotel Name'}
     )
 
     fig.update_layout(
