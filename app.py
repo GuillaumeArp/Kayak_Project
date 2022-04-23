@@ -4,7 +4,6 @@ import numpy as np
 import plotly.express as px
 import requests
 import os
-import datetime
 
 st.set_page_config(page_title='Kayak', page_icon=':sunny:', layout='wide')
 
@@ -15,34 +14,7 @@ mapbox_token = os.getenv('MAPBOX_TOKEN')
 
 def load_data():
     'Loading data...'
-    return pd.read_csv('df_complete.csv')
-
-def get_weather_data(df):
-
-    df_full = df.copy(deep=True)
-    df_full.drop(['felt_temperature', 'rain_chances', 'humidity', 'score_weather'], axis=1, inplace=True)
-    temps_list = []
-    rain_pop = []
-    humidity_list = []
-
-    for i in df_full.itertuples():
-        lat = i.lat
-        lon = i.lon
-        r = requests.get(f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=metric&appid={key}").json()
-        weather_7_days = r['daily'][1:] 
-        temps = [j['feels_like']['day'] for j in weather_7_days]
-        rain = [int(j['pop'] * 100) for j in weather_7_days]
-        humidity = [j['humidity'] for j in weather_7_days]
-        temps_list.append(temps)
-        rain_pop.append(rain)
-        humidity_list.append(humidity)        
-
-    df_full['felt_temperature'] = temps_list
-    df_full['rain_chances'] = rain_pop
-    df_full['humidity'] = humidity_list
-    df_full['score_weather'] = df_full.apply(lambda x: abs((35 - np.mean(x['felt_temperature'])) * 2) + np.mean(x['rain_chances']) + (np.mean(x['humidity']) / 2), axis=1)
-    
-    return df_full
+    return pd.read_csv('s3://kayak-project-garp/df_complete.csv')
 
 def hotel_data(df):
 
@@ -71,6 +43,9 @@ def weather_data(df):
     df_weather_final = pd.DataFrame()
     df_weather_final[['id', 'city', 'lat', 'lon', 'felt_temperature', 'rain_chances', 'humidity', 'score_weather']] = df_weather[['id', 'city', 'lat', 'lon', 'felt_temperature', 'rain_chances', 'humidity', 'score_weather']]
     df_weather_final['day_plus'] = df_weather['day_plus'].apply(eval)
+    df_weather_final['felt_temperature'] = df_weather['felt_temperature'].apply(eval)
+    df_weather_final['rain_chances'] = df_weather['rain_chances'].apply(eval)
+    df_weather_final['humidity'] = df_weather['humidity'].apply(eval)
     df_weather_final[['lat', 'lon']] = df_weather[['lat', 'lon']].apply(pd.to_numeric)
 
     df_weather_full = df_weather_final.sort_values('score_weather')
@@ -82,26 +57,23 @@ def weather_data(df):
     return df_weather_full
 
 df_s3 = load_data()
-df = get_weather_data(df_s3)
-df_weather_full = weather_data(df)
-df_hotels_full = hotel_data(df)
+df_s3['updated_at'] = pd.to_datetime(df_s3['updated_at'])
+df_weather_full = weather_data(df_s3)
+df_hotels_full = hotel_data(df_s3)
 
-now_1 = datetime.datetime.now()
+now_1 = df_s3.loc[1, 'updated_at']
 now_string_1 = now_1.strftime("%d/%m/%Y %H:%M:%S")
 
 with st.sidebar:
-    'Click here to refresh the data from OpenWeather (please once per hour maximum).'
+    'Weather Data is updated every 2 hours and sent to S3 automatically.'
+    'Click here to force a refresh of the page and get the latest data.'
     if st.button('Refresh Weather Data'):
-        now_2 = datetime.datetime.now()
         df_s3 = load_data()
-        df = get_weather_data(df_s3)
-        df_weather_full = weather_data(df)
-        df_hotels_full = hotel_data(df)
-        now_1 = now_2
-        now_string_1 = now_1.strftime("%d/%m/%Y %H:%M:%S")
-        st.write('Last refresh:', now_string_1)
+        df_weather_full = weather_data(df_s3)
+        df_hotels_full = hotel_data(df_s3)
+        st.write(f'Last refresh: {now_string_1}')
     else:
-        st.write('Last refresh:', now_string_1)
+        st.write(f'Last refresh: {now_string_1}')
 
 st.write('This page shows the two plots required as deliverables for the Kayak Project, as part of the Jedha Bootcamp Fullstack training.')
 st.markdown('The repository of this project can be found [on this page](https://github.com/GuillaumeArp/Kayak_Project).')
