@@ -66,7 +66,7 @@ now_1 = df_s3.loc[1, 'updated_at']
 now_string_1 = now_1.strftime("%d/%m/%Y %H:%M:%S")
 
 with st.sidebar:
-    'Weather Data is updated every 2 hours and sent to S3 automatically.'
+    'Weather Data is updated every 12 hours and sent to S3 automatically.'
     'Click here to force a refresh of the page and get the latest data.'
     if st.button('Refresh Weather Data'):
         df_s3 = load_data()
