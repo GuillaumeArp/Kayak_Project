@@ -10,7 +10,7 @@ load_dotenv()
 
 key = os.getenv('APIKEY')
 
-df = pd.read_csv('df_complete.csv')
+df = pd.read_csv('/Users/guillaumearp/Python_Projects/Kayak_Project/df_complete.csv')
 now = datetime.datetime.now()
 
 def get_weather_data(df):
@@ -42,8 +42,8 @@ def get_weather_data(df):
     return df_full
 
 df_complete = get_weather_data(df)
-df_complete.to_csv('df_complete.csv', index=False, header=True)
+df_complete.to_csv('/Users/guillaumearp/Python_Projects/Kayak_Project/df_complete.csv', index=False, header=True)
 
 session = boto3.Session()
 s3 = boto3.resource('s3')
-s3.Bucket('kayak-project-garp').upload_file('df_complete.csv', 'df_complete.csv')
+s3.Bucket('kayak-project-garp').upload_file('/Users/guillaumearp/Python_Projects/Kayak_Project/df_complete.csv', 'df_complete.csv')
