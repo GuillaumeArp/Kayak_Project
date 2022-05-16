@@ -1,5 +1,8 @@
 Project main deliverable can be consulted [on this page](https://share.streamlit.io/guillaumearp/kayak_project/main/app.py).
 
+Some parts of this project, especially regarding web scraping, were done in collaboration with [Bérenger Queune](https://github.com/BerengerQueune), and I would like to address special thanks to him. 
+
+---------
 
 Project description:
 
