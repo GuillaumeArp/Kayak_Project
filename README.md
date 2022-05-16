@@ -3,7 +3,7 @@ Project main deliverable can be consulted [on this page](https://share.streamlit
 
 Project description:
 
-![Kayak](https://seekvectorlogo.com/wp-content/uploads/2018/01/kayak-vector-logo.png)
+[Kayak](https://seekvectorlogo.com/wp-content/uploads/2018/01/kayak-vector-logo.png)
 
 # Plan your trip with Kayak 
 
